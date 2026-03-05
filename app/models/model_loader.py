@@ -1,14 +1,10 @@
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
-import torch
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-MODEL_NAME = "distilbert-base-uncased"
+MODEL_PATH = "model/goemotions_model"
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME,
-                                                           NUM_LABELS,
-                                                           problem_type="multi_label_classification" #cambia la loss 
-                                                           )
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
 
 model.eval()
 
