@@ -155,5 +155,5 @@ trainer.train()
 
 #guardar modelo
 
-trainer.save_model("./model/goemotions_model")
-tokenizer.save_pretrained("./model/goemotions_model")
+trainer.save_model("../model/goemotions_model")
+tokenizer.save_pretrained("../model/goemotions_model")
