@@ -1,0 +1,104 @@
+from datasets import load_dataset
+from app.services.sentiment_service import EMOTIONS
+from app.models.model_loader import tokenizer, model
+import evaluate
+from transformers import TrainingArguments, Trainer
+import torch #cuales d esas lib son hugging face?
+
+#cargar ds
+
+dataset = load_dataset("go_emotions")
+
+label_names = dataset["train"].features["labels"].feature.names
+
+selected_indices = [label_names.index(emotion) for emotion in EMOTIONS]
+
+NUM_LABELS = len(EMOTIONS)
+
+#convertir a multi-hot
+
+def filter_and_binarize(batch):
+    new_labels = []
+
+    for labels in batch["labels"]:
+        multi_hot = [0] * NUM_LABELS
+
+        for label_id in labels:
+            if label_id in selected_indices:
+                position = selected_indices.index(label_id)
+                multi_hot[position] = 1
+
+        new_labels.append(multi_hot)
+    
+    batch["labels"] = new_labels
+    return batch
+
+dataset.map(filter_and_binarize, batched=True)
+
+#tokenizacion 
+
+
+def tokenize(batch):
+    tokenizer(
+        dataset,
+        truncation=True,
+        padding="max_length",
+        max_length=128
+    )
+
+#formato para pytorch
+
+dataset.set_format(
+    type="torch",
+    columns=["input_ids", "attention_mask","labels"]
+)
+
+#modelo multilabel
+
+#metrica micro f1
+
+f1_metric = evaluate.load("f1")
+
+def compute_metrics(eval_pred):
+    logits, labels = eval_pred
+
+    probs = torch.sigmoid(torch.tensor(logits))
+    preds = (probs > 0.5).int()
+
+    return{
+        "f1_micro": f1_metric.compute(predictions=preds,
+                                      references=labels,
+                                      average="micro")["f1"]
+    }
+
+
+#training arguments
+
+training_args = TrainingArguments(
+    output_dir="./models/checkpoints",
+    evaluation_strategy="epoch",
+    save_strategy="epoch",
+    logging_dir="./logs",
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
+    num_train_epochs=3,
+    load_best_model_at_end=True
+)
+
+
+#trainer
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset= dataset["train"],
+    eval_dataset=dataset["validation"],
+    compute_metrics=compute_metrics
+)
+
+#entrenar
+
+trainer.train
+
+trainer.save_model("./models/goemotions_model")
+tokenizer.save_pretrained("./models/goemotions_model")

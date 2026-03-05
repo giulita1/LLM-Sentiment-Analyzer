@@ -1,0 +1,135 @@
+html{
+    --oscuro: rgb(52 47 45);
+    --oscuroblur: rgb(52, 46, 45, 0.7);
+    --clarito: #f3f2f1;
+    --marron: rgb(138 124 117);
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+
+@font-face {
+    font-family: 'Inter 18pt';
+    src: url('fonts/Inter18pt-ExtraLight.woff2') format('woff2'),
+        url('fonts/Inter18pt-ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+body{
+    background-color: var(--oscuro);
+    display: flex;
+    font-family: 'Inter 18pt';
+    backdrop-filter: blur(20px);
+    min-height: 100vh;
+
+    align-items: center;
+
+}
+
+.app{
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    padding: 20px;
+}
+h1{
+    color: var(--clarito);
+    text-align: center;
+}
+
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    gap: 50px;
+}
+
+.container-coment{
+    background-color: var(--clarito);
+    height: 60px;
+    width: 300px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 12px;
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 2;
+}
+
+.container.active .container-coment{
+    transform: translateX(-100px);
+}
+
+.container.active .container-response{
+    transform: translateX(0); /*se desliza a su posicion original*/
+    opacity: 1;
+    pointer-events: auto;
+}
+.btn-send{
+    background-color: var(--oscuro);
+    border: none;
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+    text-align:  center;
+    color: var(--clarito);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+    cursor: pointer;
+    
+}
+
+.btn-send:hover{
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    transform: scale(1.1);
+}
+
+.btn-send:active{
+    transform: scale(0.95);
+
+}
+
+.input-coment{
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    flex: 1;
+    background-color: var(--clarito);
+    padding: 0 15px;
+    outline: none;
+
+}
+
+.input-coment::placeholder{
+    color: var(--oscuroblur);
+    
+}
+
+.p-response{
+    background-color: var(--clarito);
+    text-align: center;
+    height: 60px;
+    width: 80px;
+}
+
+.container-response{
+    opacity: 0;
+    transform: translate(-50px);
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+    background-color: var(--marron);
+}
+
