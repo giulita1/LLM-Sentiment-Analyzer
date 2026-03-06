@@ -1,34 +1,37 @@
-import torch
-from app.models.model_loader import get_model
+import requests
+import os
 
-EMOTIONS = [
-    "joy",
-    "sadness",
-    "anger",
-    "fear",
-    "surprise",
-    "neutral"
-]
+EMOTIONS = ["joy", "sadness", "anger", "fear", "surprise", "neutral"]
 
-model, tokenizer = get_model()
+MODEL_ID = "giulidimasi/Emotions"
+API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
+
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 def predict_sentiment(text: str):
-    inputs = tokenizer(
-        text,
-        return_tensors="pt",
-        truncation=True,
-        padding=True,
-        max_length=128
-    )
+    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+    payload = {"inputs": text}
+    
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        
+        # Si la API está despertando al modelo, puede tardar unos segundos la primera vez
+        if response.status_code == 200:
+            result = response.json()
+            
+            # Hugging Face suele devolver una lista de diccionarios: [[{'label': 'joy', 'score': 0.99}, ...]]
+            # Filtramos solo los que tengan un score mayor a 0.5 (como tu lógica anterior)
+            formatted_result = {}
+            for prediction in result[0]:
+                label = prediction['label']
+                score = prediction['score']
+                if score > 0.5:
+                    formatted_result[label] = float(score)
+            
+            return formatted_result if formatted_result else {"neutral": 1.0}
+            
+        else:
+            return {"error": f"API Error: {response.status_code}", "details": response.text}
 
-    with torch.no_grad():
-        outputs = model(**inputs),
-
-    probs = torch.sigmoid(outputs.logits)
-    preds = (probs>0.5).int()[0]
-
-    return {
-        EMOTIONS[i]: float(probs[0][i])
-        for i in range(len(EMOTIONS))
-        if preds[i]==1
-    }
+    except Exception as e:
+        return {"error": "Connection Failed", "details": str(e)}

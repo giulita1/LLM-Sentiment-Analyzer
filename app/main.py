@@ -14,9 +14,14 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=["*"],
                    allow_headers=["*"],)
 
+
+@app.get("/")
+async def read_index():
+    return FileResponse('static/index.html')
+
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
-
+   
 @app.post('/coment')
 async def coment(request: TextRequest):
     
