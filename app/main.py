@@ -24,7 +24,7 @@ if os.path.exists("static"):
    
 @app.post('/coment')
 async def coment(request: TextRequest):
-    
+    print(f"Recibí esto: {request}")
     result =  predict_sentiment(request.text)
 
     return { "predictions": result }

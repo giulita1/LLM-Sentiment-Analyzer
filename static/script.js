@@ -16,7 +16,7 @@ async function enviar() {
     const response = await fetch('/coment',{
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({comment: text})
+        body: JSON.stringify({text: text})
     });
 
     if(!response.ok){
