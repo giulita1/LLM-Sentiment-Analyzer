@@ -34,6 +34,8 @@ pResponse.innerHTML = "<b>Detected emotions</b>";
 const grid = document.createElement("div");
 grid.classList.add("emotion-grid");
 
+let delay =0;
+
 for (const emotion in predictions) {
 
     const porcentaje = (predictions[emotion] * 100).toFixed(1);
@@ -47,7 +49,7 @@ for (const emotion in predictions) {
 
     const valor = document.createElement("div");
     valor.classList.add("emotion-percent");
-    valor.textContent = percent + "%";
+    valor.textContent = porcentaje + "%";
 
     card.appendChild(label);
     card.appendChild(valor);
