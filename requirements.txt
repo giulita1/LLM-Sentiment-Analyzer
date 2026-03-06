@@ -5,3 +5,4 @@ torch
 pydantic
 python-multipart
 gunicorn
+requests

@@ -1,5 +1,2 @@
-model/goemotions_model/model.safetensors
-model/goemotions_model/*.bin
-node_modules/
 __pycache__/
 .env
