@@ -3,7 +3,7 @@ const btn = document.getElementById('btn-send');
 const pResponse = document.getElementById('p-response');
 const container = document.querySelector('.container');
 
-btn.addEventListener("click", enviar());
+btn.addEventListener("click", enviar);
 
 async function enviar() {
 
