@@ -120,9 +120,12 @@ h1{
 
 .p-response{
     background-color: var(--clarito);
-    text-align: center;
+    text-align: left;
+  
     height: 60px;
     width: 80px;
+    border-radius: 12px;
+    padding: 15px;
 }
 
 .container-response{
@@ -133,3 +136,43 @@ h1{
     background-color: var(--marron);
 }
 
+.emotion-grid{
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.emotion-card{
+    background: var(--clarito);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.emotion-card.show{
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.4s ease;
+}
+
+.emotion-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.emotion-name{
+    font-size: 13px;
+    color: var(--oscuroblur);
+    text-transform: capitalize;
+}
+
+.emotion-percent{
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--oscuro);
+}

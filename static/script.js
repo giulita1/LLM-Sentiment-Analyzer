@@ -27,7 +27,41 @@ async function enviar() {
     
     const data = await response.json();
 
-    pResponse.textContent = data.predictions;
+   const predictions = data.predictions;
+
+pResponse.innerHTML = "<b>Detected emotions</b>";
+
+const grid = document.createElement("div");
+grid.classList.add("emotion-grid");
+
+for (const emotion in predictions) {
+
+    const porcentaje = (predictions[emotion] * 100).toFixed(1);
+
+    const card = document.createElement("div");
+    card.classList.add("emotion-card");
+
+    const label = document.createElement("div");
+    label.classList.add("emotion-name");
+    label.textContent = emotion;
+
+    const valor = document.createElement("div");
+    valor.classList.add("emotion-percent");
+    valor.textContent = percent + "%";
+
+    card.appendChild(label);
+    card.appendChild(valor);
+
+    setTimeout(() => {
+        card.classList.add("show");
+    }, delay);
+
+    delay += 120;
+
+    grid.appendChild(card);
+}
+
+pResponse.appendChild(grid);
 
     container.classList.add('active');
 

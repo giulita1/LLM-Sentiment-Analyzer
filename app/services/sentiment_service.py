@@ -15,12 +15,9 @@ def predict_sentiment(text: str):
     try:
         response = requests.post(API_URL, headers=headers, json=payload)
         
-        # Si la API está despertando al modelo, puede tardar unos segundos la primera vez
         if response.status_code == 200:
             result = response.json()
             
-            # Hugging Face suele devolver una lista de diccionarios: [[{'label': 'joy', 'score': 0.99}, ...]]
-            # Filtramos solo los que tengan un score mayor a 0.5 (como tu lógica anterior)
             formatted_result = {}
             for prediction in result[0]:
                 label = prediction['label']

@@ -14,6 +14,12 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=["*"],
                    allow_headers=["*"],)
 
+@app.post('/coment')
+async def coment(request: TextRequest):
+    print(f"Recibí esto: {request}")
+    result =  predict_sentiment(request.text)
+
+    return { "predictions": result }
 
 @app.get("/")
 async def read_index():
@@ -22,9 +28,3 @@ async def read_index():
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
    
-@app.post('/coment')
-async def coment(request: TextRequest):
-    print(f"Recibí esto: {request}")
-    result =  predict_sentiment(request.text)
-
-    return { "predictions": result }
